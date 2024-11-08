@@ -3,7 +3,6 @@
  * @return {number} result
  */
 const longestConsecutive = function (nums) {
-  const map = new Map();
   nums.sort((a, b) => a - b);
 
   let countSort = [0];

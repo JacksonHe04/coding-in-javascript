@@ -1,5 +1,5 @@
 /**
- * 该解法使用了双指针
+ * 该解法使用了双指针，是推荐的解法
  * @param {number[]} nums
  * @return {void} Do not return anything, modify nums in-place instead.
  */

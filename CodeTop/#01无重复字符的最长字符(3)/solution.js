@@ -29,10 +29,3 @@ function lengthOfLongestSubstring(s) {
 
   return ans; // 返回最终结果
 }
-
-// 测试用例
-console.log(lengthOfLongestSubstring("abcabcbb")); // 输出 3 ("abc")
-console.log(lengthOfLongestSubstring("bbbbb")); // 输出 1 ("b")
-console.log(lengthOfLongestSubstring("pwwkew")); // 输出 3 ("wke")
-console.log(lengthOfLongestSubstring("")); // 输出 0 (空字符串)
-console.log(lengthOfLongestSubstring(" ")); // 输出 1 (" ")

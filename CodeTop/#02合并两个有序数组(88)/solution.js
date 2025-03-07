@@ -1,7 +1,25 @@
-const merge = function (nums1, m, nums2, n) {
-  // 使用 splice 方法从索引 m 开始删除 nums1 中多余的元素，并将 nums2 的所有元素插入到 nums1 中
-  nums1.splice(m, nums1.length - m, ...nums2);
-
-  // 对合并后的数组进行排序，确保 nums1 是有序的。这里使用了 sort 方法和比较函数 (a, b) => a - b 来实现升序排列
-  nums1.sort((a, b) => a - b);
+/**
+ * 合并两个已排序的数组，使得结果数组也是有序的。
+ * 这个函数直接在第一个数组上修改，而不是创建一个新的数组。
+ * 它通过从后向前比较两个数组的元素，并将较大的元素放在正确的位置。
+ * 
+ * @param {number[]} nums1 - 第一个有序数组，有足够的空间来容纳合并后的结果。
+ * @param {number} m - 第一个数组中有效元素的数量。
+ * @param {number[]} nums2 - 第二个有序数组，需要合并到第一个数组中。
+ * @param {number} n - 第二个数组中有效元素的数量。
+ */
+var merge = function(nums1, m, nums2, n) {
+  // 初始化三个指针，分别指向 nums1 的有效元素末尾、nums2 的末尾和 nums1 的末尾
+  let p1 = m - 1, p2 = n - 1, p = m + n - 1;
+  
+  // 当 nums2 还有元素需要合并时，继续循环
+  while (p2 >= 0) {
+      // 如果 nums1 的当前元素大于 nums2 的当前元素，将 nums1 的当前元素复制到正确的位置，并移动指针
+      if (p1 >= 0 && nums1[p1] > nums2[p2]) {
+          nums1[p--] = nums1[p1--];
+      } else {
+          // 否则，将 nums2 的当前元素复制到正确的位置，并移动指针
+          nums1[p--] = nums2[p2--];
+      }
+  }
 };

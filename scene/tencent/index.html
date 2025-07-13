@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vue 3 Calculator</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@vue/babel-plugin-jsx@1.2.2/dist/index.min.js"></script>
+    <style>
+        .calculator {
+            max-width: 400px;
+            margin: 50px auto;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+        }
+
+        .display {
+            padding: 10px;
+            margin-bottom: 10px;
+            background-color: #f2f2f2;
+            text-align: right;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .button {
+            width: 23%;
+            padding: 10px;
+            margin: 1%;
+            font-size: 1.2em;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #e7e7e7;
+            cursor: pointer;
+        }
+
+        .button:hover {
+            background-color: #d7d7d7;
+        }
+
+        .row {
+            display: flex;
+            justify-content: space-between;
+        }
+    </style>
+</head>
+<body>
+<div id="app" class="calculator">
+    <div class="display">{{ display }}</div>
+    <div class="row">
+        <button class="button" @click="clear">C</button>
+        <button class="button" @click="sign">±</button>
+        <button class="button" @click="percent">%</button>
+        <button class="button" @click="setOperator('/')">÷</button>
+    </div>
+    <div class="row">
+        <button class="button" @click="append('7')">7</button>
+        <button class="button" @click="append('8')">8</button>
+        <button class="button" @click="append('9')">9</button>
+        <button class="button" @click="setOperator('*')">x</button>
+    </div>
+    <div class="row">
+        <button class="button" @click="append('4')">4</button>
+        <button class="button" @click="append('5')">5</button>
+        <button class="button" @click="append('6')">6</button>
+        <button class="button" @click="setOperator('-')">-</button>
+    </div>
+    <div class="row">
+        <button class="button" @click="append('1')">1</button>
+        <button class="button" @click="append('2')">2</button>
+        <button class="button" @click="append('3')">3</button>
+        <button class="button" @click="setOperator('+')">+</button>
+    </div>
+    <div class="row">
+        <button class="button" @click="append('0')">0</button>
+        <button class="button" @click="append('.')">.</button>
+        <button class="button" style="flex: 2;" @click="calculate">=</button>
+    </div>
+</div>
+
+<script>
+  const { createApp, ref, computed } = Vue;
+  createApp({
+    setup() {
+      const current = ref('');
+      const previous = ref(null);
+      const operator = ref(null);
+      const operatorClicked = ref(false);
+
+      const display = computed(() => current.value || '0');
+      // const display = ref(displayValue.value);
+
+
+      function clear() {
+        current.value = '';
+      }
+
+      function sign() {
+        current.value = current.value.charAt(0) === '-' ? current.value.slice(1) : `-${current.value}`;
+      }
+
+      function percent() {
+        current.value = `${parseFloat(current.value) / 100}`;
+      }
+
+      function append(number) {
+        if (operatorClicked.value) {
+          current.value = '';
+          operatorClicked.value = false;
+        }
+        current.value = `${current.value}${number}`;
+      }
+
+      function setPrevious() {
+        previous.value = current.value;
+        operatorClicked.value = true;
+      }
+
+      function calculate() {
+        let result;
+        const currentNumber = parseFloat(current.value);
+        const previousNumber = parseFloat(previous.value);
+
+        if (isNaN(previousNumber) || isNaN(currentNumber)) {
+          return;
+        }
+
+        switch (operator.value) {
+          case '+':
+            result = previousNumber + currentNumber;
+          case '-':
+            result = previousNumber - currentNumber;
+          case '*':
+            result = previousNumber * currentNumber;
+          case '/':
+            result = previousNumber / currentNumber;
+          default:
+            return;
+        }
+
+        current.value = result;
+        operator.value = null;
+        previous.value = null;
+      }
+
+      function setOperator(op) {
+        if (current.value === '') return;
+        if (previous.value !== null) {
+          calculate();
+        } else {
+          setPrevious();
+        }
+
+        operator.value = op;
+        operatorClicked.value = true;
+      }
+
+      return {
+        display,
+        clear,
+        sign,
+        percent,
+        append,
+        calculate,
+        setOperator
+      };
+    }
+  }).mount('#app');
+</script>
+</body>
+</html>

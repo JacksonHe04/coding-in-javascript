@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSONP 客户端示例</title>
+</head>
+<body>
+    <h1>JSONP 跨域请求示例</h1>
+    <button onclick="makeJsonpRequest()">发送JSONP请求</button>
+    <div id="result"></div>
+
+    <script>
+        /**
+         * 处理JSONP响应的回调函数
+         * @param {Object} data - 服务器返回的数据
+         */
+        function handleResponse(data) {
+            console.log("接收到的数据:", data);
+            document.getElementById('result').innerHTML = 
+                `<h3>响应结果:</h3><pre>${JSON.stringify(data, null, 2)}</pre>`;
+        }
+
+        /**
+         * 发送JSONP请求
+         * 动态创建script标签实现跨域请求
+         */
+        function makeJsonpRequest() {
+            // 移除之前的script标签（如果存在）
+            const existingScript = document.getElementById('jsonp-script');
+            if (existingScript) {
+                document.body.removeChild(existingScript);
+            }
+
+            // 动态创建script标签
+            const script = document.createElement("script");
+            script.id = 'jsonp-script';
+            script.src = "http://localhost:8080/jsonp?callback=handleResponse&name=doubao";
+            
+            // 添加错误处理
+            script.onerror = function() {
+                console.error('JSONP请求失败');
+                document.getElementById('result').innerHTML = 
+                    '<h3 style="color: red;">请求失败，请确保服务器已启动</h3>';
+            };
+            
+            document.body.appendChild(script);
+        }
+    </script>
+</body>
+</html>
